@@ -7,533 +7,505 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --cream:    #FAF8F3;
-      --stone:    #F2EBE0;
-      --dark:     #1A1410;
-      --mid:      #4A4240;
-      --muted:    #A09590;
-      --brass:    #B89060;
-      --night:    #0D0B09;
-      --white:    #FFFFFF;
-      --ease:     cubic-bezier(0.25,0.1,0.25,1);
-      --ease-out: cubic-bezier(0.16,1,0.3,1);
+      --cream:  #FAF8F3;
+      --stone:  #F2EAE0;
+      --dark:   #1A1410;
+      --mid:    #4A4240;
+      --muted:  #A09590;
+      --brass:  #B89060;
+      --night:  #0D0B09;
+      --ease:   cubic-bezier(0.25,0.1,0.25,1);
+      --eout:   cubic-bezier(0.16,1,0.3,1);
     }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      background: var(--cream); color: var(--dark);
-      font-family: 'Jost', sans-serif; font-weight: 300;
-      font-size: 16px; line-height: 1.75;
-      -webkit-font-smoothing: antialiased;
-    }
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    html { scroll-behavior:smooth; }
+    body { background:var(--cream); color:var(--dark); font-family:'Jost',sans-serif; font-weight:300; font-size:16px; line-height:1.75; -webkit-font-smoothing:antialiased; }
 
-    /* PROGRESS */
-    #progress { position:fixed; top:0; left:0; height:2px; background:var(--brass); z-index:999; width:0%; transition:width .1s linear; }
+    /* ── PROGRESS BAR ── */
+    #bar { position:fixed; top:0; left:0; height:2px; background:var(--brass); z-index:999; width:0%; transition:width .1s linear; pointer-events:none; }
 
-    /* NAV */
+    /* ── NAV ── */
     nav {
       position:fixed; top:0; left:0; right:0; z-index:100;
       height:72px; display:flex; align-items:center; justify-content:space-between;
       padding:0 48px;
-      background:rgba(250,248,243,0.97); backdrop-filter:blur(16px);
-      border-bottom:1px solid rgba(26,20,16,0.07);
-      transition:box-shadow .4s var(--ease);
+      background:rgba(250,248,243,0.96); backdrop-filter:blur(20px);
+      border-bottom:1px solid rgba(26,20,16,0.06);
+      transition:box-shadow .4s;
     }
-    nav.scrolled { box-shadow:0 1px 24px rgba(26,20,16,0.06); }
-    .nav-logo { display:flex; align-items:center; gap:14px; text-decoration:none; color:var(--dark); }
-    .nav-mark { width:40px; height:40px; flex-shrink:0; }
-    .nav-txt { display:flex; flex-direction:column; line-height:1.1; }
-    .nav-txt .nm { font-weight:500; font-size:12px; letter-spacing:.25em; text-transform:uppercase; }
-    .nav-txt .tg { font-size:9px; font-weight:300; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); }
-    .nav-cta {
-      font-size:11px; font-weight:400; letter-spacing:.2em; text-transform:uppercase;
-      color:var(--dark); text-decoration:none; border-bottom:1px solid transparent; padding-bottom:2px;
-      transition:color .3s, border-color .3s;
-    }
-    .nav-cta:hover { color:var(--brass); border-color:var(--brass); }
+    nav.up { box-shadow:0 2px 32px rgba(26,20,16,0.07); }
+    .nav-brand { display:flex; align-items:center; gap:14px; text-decoration:none; }
+    .nav-logo-img { width:40px; height:40px; border-radius:50%; object-fit:cover; }
+    .nav-brand-text { display:flex; flex-direction:column; line-height:1.1; }
+    .nav-brand-text .nm { font-weight:500; font-size:12px; letter-spacing:.25em; text-transform:uppercase; color:var(--dark); }
+    .nav-brand-text .tg { font-size:9px; font-weight:300; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); }
+    .nav-link { font-size:11px; font-weight:400; letter-spacing:.2em; text-transform:uppercase; color:var(--dark); text-decoration:none; border-bottom:1px solid transparent; padding-bottom:2px; transition:color .3s,border-color .3s; }
+    .nav-link:hover { color:var(--brass); border-color:var(--brass); }
 
-    /* HERO */
-    .hero { height:100dvh; min-height:640px; display:grid; grid-template-columns:1fr 1fr; padding-top:72px; }
-    .hero-l { display:flex; flex-direction:column; justify-content:flex-end; padding:64px 64px 80px; position:relative; }
-    .eyebrow {
-      font-size:10px; font-weight:400; letter-spacing:.35em; text-transform:uppercase; color:var(--brass); margin-bottom:28px;
-      opacity:0; transform:translateY(14px); animation:up .8s var(--ease-out) .2s forwards;
+    /* ── HERO ── */
+    .hero {
+      min-height:100dvh; padding-top:72px;
+      display:flex; flex-direction:column; justify-content:space-between;
+      padding-left:60px; padding-right:60px; padding-bottom:0;
+      position:relative; overflow:hidden;
     }
-    .hero-h1 { font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(52px,6.5vw,96px); line-height:1.04; letter-spacing:-.01em; margin-bottom:36px; }
-    .hero-h1 .l { display:block; opacity:0; transform:translateY(22px); }
-    .hero-h1 .l:nth-child(1){animation:up 1s var(--ease-out) .35s forwards;}
-    .hero-h1 .l:nth-child(2){animation:up 1s var(--ease-out) .5s forwards;}
-    .hero-h1 .l:nth-child(3){font-style:italic; animation:up 1s var(--ease-out) .65s forwards;}
-    .hero-p { font-size:15px; line-height:1.85; color:var(--mid); max-width:380px; margin-bottom:44px; opacity:0; transform:translateY(14px); animation:up .8s var(--ease-out) .85s forwards; }
-    .hero-btns { display:flex; align-items:center; gap:32px; opacity:0; transform:translateY(14px); animation:up .8s var(--ease-out) 1s forwards; }
-    .btn-dark {
-      display:inline-flex; align-items:center; gap:8px;
-      background:var(--dark); color:var(--cream); font-family:'Jost',sans-serif; font-weight:400;
-      font-size:11px; letter-spacing:.22em; text-transform:uppercase;
-      padding:16px 32px; text-decoration:none; border:1px solid var(--dark);
-      transition:background .35s var(--ease), color .35s;
+    /* Decorative partial circle — luxury editorial signature */
+    .hero::before {
+      content:'';
+      position:absolute;
+      right: -18vw; top: -8vw;
+      width:48vw; height:48vw;
+      border:1px solid rgba(184,144,96,0.18);
+      border-radius:50%;
+      pointer-events:none;
     }
-    .btn-dark:hover { background:transparent; color:var(--dark); }
-    .btn-ghost {
-      font-size:11px; font-weight:300; letter-spacing:.15em; text-transform:uppercase;
-      color:var(--mid); text-decoration:none; border-bottom:1px solid var(--muted); padding-bottom:2px;
-      transition:color .3s, border-color .3s;
+    .hero::after {
+      content:'';
+      position:absolute;
+      right: -10vw; top: 2vw;
+      width:32vw; height:32vw;
+      border:1px solid rgba(184,144,96,0.1);
+      border-radius:50%;
+      pointer-events:none;
     }
-    .btn-ghost:hover { color:var(--brass); border-color:var(--brass); }
+    .hero-eyebrow {
+      padding-top:52px;
+      font-size:10px; font-weight:400; letter-spacing:.4em; text-transform:uppercase; color:var(--brass);
+      opacity:0; animation:up .7s var(--eout) .1s forwards;
+    }
+    .hero-body { flex:1; display:flex; flex-direction:column; justify-content:center; padding:32px 0 28px; }
+    .hero-h1 {
+      font-family:'Cormorant Garamond',serif; font-weight:300;
+      font-size:clamp(68px,11vw,158px);
+      line-height:.93; letter-spacing:-.02em; color:var(--dark);
+      max-width:80vw;
+    }
+    .hero-h1 .l { display:block; opacity:0; transform:translateY(24px); }
+    .hero-h1 .l1 { animation:up 1s var(--eout) .25s forwards; }
+    .hero-h1 .l2 { animation:up 1s var(--eout) .42s forwards; }
+    .hero-h1 .l3 { font-style:italic; animation:up 1s var(--eout) .59s forwards; }
+    .hero-foot {
+      display:grid; grid-template-columns:1fr 1fr;
+      align-items:center; gap:40px;
+      padding:36px 0 52px;
+      border-top:1px solid rgba(26,20,16,.1);
+      opacity:0; animation:up .8s var(--eout) 1s forwards;
+    }
+    .hero-sub { font-size:15px; line-height:1.85; color:var(--mid); max-width:480px; }
+    .hero-actions { display:flex; align-items:center; gap:28px; justify-content:flex-end; }
+    .btn-fill { display:inline-flex; align-items:center; background:var(--dark); color:#FAF8F3; font-family:'Jost',sans-serif; font-weight:400; font-size:11px; letter-spacing:.22em; text-transform:uppercase; padding:16px 36px; text-decoration:none; border:1px solid var(--dark); transition:background .3s,color .3s; white-space:nowrap; }
+    .btn-fill:hover { background:transparent; color:var(--dark); }
+    .btn-line { font-size:11px; font-weight:300; letter-spacing:.15em; text-transform:uppercase; color:var(--mid); text-decoration:none; border-bottom:1px solid var(--muted); padding-bottom:2px; transition:color .3s,border-color .3s; white-space:nowrap; }
+    .btn-line:hover { color:var(--brass); border-color:var(--brass); }
 
-    .hero-r { background:var(--night); position:relative; display:flex; align-items:center; justify-content:center; overflow:hidden; }
-    .hero-bgmono { position:absolute; width:85%; opacity:.055; top:50%; left:50%; transform:translate(-50%,-50%); }
-    .hero-wlogo { width:110px; height:110px; position:relative; z-index:1; opacity:0; animation:fadein 1.4s var(--ease-out) 1.2s forwards; }
-    .hero-vert { position:absolute; right:22px; bottom:64px; font-size:8px; font-weight:300; letter-spacing:.38em; text-transform:uppercase; color:rgba(255,255,255,.18); writing-mode:vertical-rl; }
+    /* ── MARQUEE ── */
+    .mq { background:var(--dark); padding:15px 0; overflow:hidden; }
+    .mq-t { display:flex; width:max-content; animation:scroll 30s linear infinite; }
+    .mq-i { font-size:10px; font-weight:300; letter-spacing:.38em; text-transform:uppercase; color:rgba(255,255,255,.3); padding:0 52px; white-space:nowrap; }
+    .mq-i b { color:var(--brass); font-weight:400; }
 
-    /* MARQUEE */
-    .marquee { background:var(--dark); padding:16px 0; overflow:hidden; }
-    .mtrack { display:flex; width:max-content; animation:scroll 32s linear infinite; }
-    .mitem { font-size:10px; font-weight:300; letter-spacing:.38em; text-transform:uppercase; color:rgba(255,255,255,.32); padding:0 52px; white-space:nowrap; }
-    .mitem b { color:var(--brass); font-weight:400; }
+    /* ── SCROLL REVEAL ── */
+    .r { opacity:0; transform:translateY(28px); transition:opacity .9s var(--eout),transform .9s var(--eout); }
+    .r.on { opacity:1; transform:none; }
+    .d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}.d5{transition-delay:.5s}
 
-    /* UTILS */
+    /* ── SHARED ── */
     .lbl { font-size:10px; font-weight:400; letter-spacing:.35em; text-transform:uppercase; color:var(--brass); display:block; margin-bottom:14px; }
-    .reveal { opacity:0; transform:translateY(28px); transition:opacity .9s var(--ease-out), transform .9s var(--ease-out); }
-    .reveal.on { opacity:1; transform:translateY(0); }
-    .d1{transition-delay:.1s;} .d2{transition-delay:.2s;} .d3{transition-delay:.3s;}
-    .d4{transition-delay:.4s;} .d5{transition-delay:.5s;}
-    .rule { height:1px; background:rgba(26,20,16,.08); }
+    .sec-rule { height:1px; background:rgba(26,20,16,.08); }
+    .serif { font-family:'Cormorant Garamond',serif; }
 
-    /* INTRO */
-    .intro { display:grid; grid-template-columns:1fr 1px 1fr; gap:80px; align-items:center; max-width:1200px; margin:0 auto; padding:120px 60px; }
-    .ivr { background:rgba(26,20,16,.08); height:100%; min-height:140px; }
-    .intro-h { font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(34px,3.5vw,50px); line-height:1.15; letter-spacing:-.01em; margin-bottom:18px; }
-    .intro-h em { font-style:italic; }
-    .intro-p { font-size:15px; line-height:1.85; color:var(--mid); }
-    .stats { display:flex; flex-direction:column; gap:32px; }
-    .sn { font-family:'Cormorant Garamond',serif; font-weight:300; font-size:44px; line-height:1; letter-spacing:-.02em; }
-    .sl { font-size:11px; font-weight:300; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); }
-    .shr { height:1px; background:rgba(26,20,16,.08); }
-
-    /* SERVICES */
-    .svcs { background:var(--stone); padding:100px 60px; }
-    .svcs-top { max-width:1200px; margin:0 auto 60px; }
+    /* ── SERVICES ── */
+    .svcs { background:var(--stone); padding:96px 60px; }
+    .svcs-head { max-width:1200px; margin:0 auto 56px; }
     .svcs-h { font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(34px,4vw,54px); line-height:1.1; letter-spacing:-.01em; }
     .svcs-h em { font-style:italic; }
     .svcs-grid { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:repeat(3,1fr); gap:2px; }
-    .svc { background:var(--cream); padding:44px 40px; border-bottom:2px solid transparent; transition:border-color .3s, background .3s; }
-    .svc:hover { border-bottom-color:var(--brass); background:var(--white); }
-    .svc-n { font-family:'Cormorant Garamond',serif; font-size:11px; font-weight:300; letter-spacing:.2em; color:var(--brass); margin-bottom:18px; }
-    .svc-name { font-family:'Cormorant Garamond',serif; font-weight:400; font-size:23px; line-height:1.2; letter-spacing:-.01em; margin-bottom:10px; }
+    .svc { background:var(--cream); padding:40px 36px; border-bottom:2px solid transparent; transition:border-color .3s,background .3s; }
+    .svc:hover { border-bottom-color:var(--brass); background:#fff; }
+    .svc-n { font-family:'Cormorant Garamond',serif; font-size:11px; letter-spacing:.2em; color:var(--brass); margin-bottom:16px; }
+    .svc-nm { font-family:'Cormorant Garamond',serif; font-weight:400; font-size:22px; letter-spacing:-.01em; margin-bottom:8px; }
     .svc-d { font-size:14px; font-weight:300; line-height:1.75; color:var(--mid); }
 
-    /* TESTIMONIAL */
-    .testi { background:var(--night); padding:120px 60px; text-align:center; }
-    .trule { width:40px; height:1px; background:var(--brass); margin:0 auto 48px; }
-    .tquote { font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:300; font-size:clamp(22px,3vw,36px); line-height:1.65; color:rgba(255,255,255,.88); max-width:760px; margin:0 auto 40px; letter-spacing:.01em; }
-    .tname { font-size:11px; font-weight:400; letter-spacing:.28em; text-transform:uppercase; color:rgba(255,255,255,.55); }
-    .trole { font-size:10px; font-weight:300; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,.28); margin-top:4px; }
+    /* ── TESTIMONIALS + CREDIBILITY ── */
+    .social-proof { background:var(--night); padding:100px 60px; }
+    .sp-inner { max-width:1200px; margin:0 auto; }
+    .sp-head { display:grid; grid-template-columns:1fr auto; align-items:end; margin-bottom:64px; gap:40px; }
+    .sp-h { font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(32px,3.5vw,48px); line-height:1.15; letter-spacing:-.01em; color:#fff; }
+    .sp-h em { font-style:italic; }
+    .sp-stat { text-align:right; }
+    .sp-stat-num { font-family:'Cormorant Garamond',serif; font-weight:300; font-size:64px; line-height:1; letter-spacing:-.02em; color:var(--brass); }
+    .sp-stat-lbl { font-size:10px; font-weight:300; letter-spacing:.3em; text-transform:uppercase; color:rgba(255,255,255,.3); margin-top:4px; }
+    /* Testimonial carousel */
+    .carousel { overflow:hidden; }
+    .carousel-track { display:flex; gap:24px; transition:transform .6s var(--eout); }
+    .t-card { flex:0 0 calc(50% - 12px); background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07); padding:40px; }
+    .t-quote { font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:300; font-size:clamp(18px,2vw,24px); line-height:1.65; color:rgba(255,255,255,.85); margin-bottom:28px; }
+    .t-rule { width:32px; height:1px; background:var(--brass); margin-bottom:16px; }
+    .t-name { font-size:11px; font-weight:400; letter-spacing:.25em; text-transform:uppercase; color:rgba(255,255,255,.5); }
+    .t-role { font-size:10px; font-weight:300; letter-spacing:.15em; text-transform:uppercase; color:rgba(255,255,255,.25); margin-top:4px; }
+    .carousel-nav { display:flex; gap:8px; margin-top:32px; }
+    .c-btn { width:36px; height:36px; border:1px solid rgba(255,255,255,.15); background:transparent; color:rgba(255,255,255,.4); font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:border-color .3s,color .3s; }
+    .c-btn:hover { border-color:var(--brass); color:var(--brass); }
 
-    /* OCCASIONS */
-    .occ { max-width:1200px; margin:0 auto; padding:120px 60px; }
-    .occ-h { font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(34px,4vw,50px); line-height:1.15; letter-spacing:-.01em; margin-bottom:60px; max-width:560px; }
-    .occ-h em { font-style:italic; }
-    .occ-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:0; }
-    .occ-item { padding:32px 0; border-top:1px solid rgba(26,20,16,.1); display:flex; gap:24px; align-items:flex-start; }
-    .occ-num { font-family:'Cormorant Garamond',serif; font-size:12px; font-weight:300; color:var(--brass); letter-spacing:.1em; flex-shrink:0; padding-top:3px; }
-    .occ-title { font-family:'Cormorant Garamond',serif; font-weight:400; font-size:20px; line-height:1.2; margin-bottom:6px; }
-    .occ-desc { font-size:14px; font-weight:300; line-height:1.7; color:var(--mid); }
+    /* ── BRIDAL ── */
+    .bridal { padding:100px 60px; }
+    .bridal-inner { max-width:1200px; margin:0 auto; }
+    .bridal-intro { display:grid; grid-template-columns:1fr 1fr; gap:80px; margin-bottom:72px; align-items:start; }
+    .bridal-h { font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(36px,4vw,56px); line-height:1.1; letter-spacing:-.01em; margin-bottom:24px; }
+    .bridal-h em { font-style:italic; }
+    .bridal-lead { font-size:16px; line-height:1.9; color:var(--mid); }
+    .bridal-right { padding-top:8px; }
+    .bridal-hook { font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:300; font-size:clamp(20px,2.2vw,28px); line-height:1.5; color:var(--dark); border-left:2px solid var(--brass); padding-left:24px; margin-bottom:32px; }
+    .bridal-p { font-size:15px; line-height:1.85; color:var(--mid); }
 
-    /* BOOKING */
-    .booking { background:var(--stone); padding:100px 60px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
-    .bk-h { font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(32px,3.5vw,46px); line-height:1.15; letter-spacing:-.01em; margin-bottom:20px; }
-    .bk-h em { font-style:italic; }
-    .bk-p { font-size:15px; line-height:1.85; color:var(--mid); margin-bottom:32px; }
-    .bk-dets { display:flex; flex-direction:column; gap:10px; }
-    .bk-det { display:flex; align-items:flex-start; gap:12px; font-size:14px; font-weight:300; color:var(--mid); }
-    .bk-det::before { content:''; width:4px; height:4px; border-radius:50%; background:var(--brass); flex-shrink:0; margin-top:9px; }
-    .bk-form { background:var(--cream); padding:48px; }
-    .bk-fh { font-family:'Cormorant Garamond',serif; font-weight:400; font-size:22px; margin-bottom:32px; }
-    .fg { margin-bottom:20px; }
+    /* Timeline */
+    .timeline { margin-bottom:72px; }
+    .tl-h { font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(24px,2.5vw,34px); letter-spacing:-.01em; margin-bottom:40px; }
+    .tl-h em { font-style:italic; }
+    .tl-steps { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; }
+    .tl-step { background:var(--stone); padding:40px 36px; position:relative; }
+    .tl-num { font-family:'Cormorant Garamond',serif; font-weight:300; font-size:48px; line-height:1; letter-spacing:-.02em; color:var(--brass); margin-bottom:20px; opacity:.5; }
+    .tl-step-h { font-family:'Cormorant Garamond',serif; font-weight:400; font-size:22px; letter-spacing:-.01em; margin-bottom:12px; }
+    .tl-step-d { font-size:14px; font-weight:300; line-height:1.75; color:var(--mid); }
+
+    /* Benefits grid */
+    .benefits-h { font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(24px,2.5vw,34px); letter-spacing:-.01em; margin-bottom:40px; }
+    .benefits-h em { font-style:italic; }
+    .benefits-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:0; margin-bottom:64px; }
+    .benefit { padding:28px 0; border-top:1px solid rgba(26,20,16,.08); display:flex; gap:20px; align-items:flex-start; }
+    .benefit-dot { width:6px; height:6px; border-radius:50%; background:var(--brass); flex-shrink:0; margin-top:8px; }
+    .benefit-text { font-size:15px; font-weight:300; line-height:1.7; color:var(--mid); }
+    .benefit-text strong { color:var(--dark); font-weight:400; }
+
+    /* Booking form */
+    .bk-grid { display:grid; grid-template-columns:1fr 1fr; gap:2px; }
+    .bk-cta { background:var(--night); padding:60px; display:flex; flex-direction:column; justify-content:center; }
+    .bk-cta-h { font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(28px,3vw,40px); line-height:1.2; letter-spacing:-.01em; color:#fff; margin-bottom:20px; }
+    .bk-cta-h em { font-style:italic; }
+    .bk-cta-p { font-size:14px; font-weight:300; line-height:1.8; color:rgba(255,255,255,.45); margin-bottom:36px; }
+    .bk-form-wrap { background:var(--stone); padding:60px; }
+    .bk-form-title { font-family:'Cormorant Garamond',serif; font-weight:400; font-size:22px; margin-bottom:32px; }
+    .fg { margin-bottom:18px; }
     .fg label { display:block; font-size:10px; font-weight:400; letter-spacing:.26em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
-    .fg input, .fg select, .fg textarea {
-      width:100%; background:transparent; border:none; border-bottom:1px solid rgba(26,20,16,.18);
-      padding:10px 0; font-family:'Jost',sans-serif; font-weight:300; font-size:15px; color:var(--dark);
-      outline:none; transition:border-color .3s; appearance:none; border-radius:0;
-    }
-    .fg input:focus, .fg select:focus, .fg textarea:focus { border-bottom-color:var(--brass); }
-    .fg select {
-      cursor:pointer;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23A09590' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat:no-repeat; background-position:right 4px center; padding-right:20px;
-    }
+    .fg input, .fg select, .fg textarea { width:100%; background:transparent; border:none; border-bottom:1px solid rgba(26,20,16,.15); padding:10px 0; font-family:'Jost',sans-serif; font-weight:300; font-size:15px; color:var(--dark); outline:none; transition:border-color .3s; appearance:none; border-radius:0; }
+    .fg input:focus,.fg select:focus,.fg textarea:focus { border-bottom-color:var(--brass); }
+    .fg select { cursor:pointer; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23A09590' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 4px center; padding-right:20px; }
     .fg textarea { resize:none; height:72px; }
-    .privacy { font-size:11px; font-weight:300; color:var(--muted); line-height:1.6; margin-bottom:28px; }
-    .btn-sub { width:100%; background:var(--dark); color:var(--cream); font-family:'Jost',sans-serif; font-weight:400; font-size:11px; letter-spacing:.26em; text-transform:uppercase; padding:18px; border:1px solid var(--dark); cursor:pointer; transition:background .3s, color .3s; }
+    .priv { font-size:11px; color:var(--muted); line-height:1.6; margin-bottom:24px; }
+    .btn-sub { width:100%; background:var(--dark); color:var(--cream); font-family:'Jost',sans-serif; font-weight:400; font-size:11px; letter-spacing:.26em; text-transform:uppercase; padding:18px; border:1px solid var(--dark); cursor:pointer; transition:background .3s,color .3s; }
     .btn-sub:hover { background:transparent; color:var(--dark); }
 
-    /* ABOUT */
-    .about { display:grid; grid-template-columns:1fr 1px 1fr; gap:80px; align-items:start; max-width:1200px; margin:0 auto; padding:120px 60px; }
-    .avr { background:rgba(26,20,16,.08); height:100%; min-height:180px; }
-    .about-h { font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(32px,3.5vw,46px); line-height:1.15; letter-spacing:-.01em; margin-bottom:20px; }
+    /* ── ABOUT ── */
+    .about { max-width:1200px; margin:0 auto; padding:100px 60px; display:grid; grid-template-columns:1fr 1px 1fr; gap:80px; align-items:start; }
+    .avr { background:rgba(26,20,16,.08); height:100%; min-height:160px; }
+    .about-h { font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(30px,3.5vw,44px); line-height:1.15; letter-spacing:-.01em; margin-bottom:20px; }
     .about-h em { font-style:italic; }
     .about-p { font-size:15px; line-height:1.85; color:var(--mid); }
-    .ainfo { display:flex; flex-direction:column; gap:24px; }
-    .ailbl { font-size:10px; font-weight:400; letter-spacing:.3em; text-transform:uppercase; color:var(--brass); display:block; margin-bottom:3px; }
-    .aival { font-size:15px; font-weight:300; color:var(--mid); line-height:1.7; }
+    .ainfo { display:flex; flex-direction:column; gap:20px; }
+    .ai { display:flex; flex-direction:column; gap:3px; }
+    .ai-l { font-size:10px; font-weight:400; letter-spacing:.3em; text-transform:uppercase; color:var(--brass); }
+    .ai-v { font-size:15px; font-weight:300; color:var(--mid); line-height:1.7; }
 
-    /* FINAL CTA */
+    /* ── FINAL CTA ── */
     .cta-s { background:var(--night); padding:120px 60px; text-align:center; }
-    .cta-h { font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(42px,5.5vw,76px); line-height:1.08; letter-spacing:-.01em; color:var(--white); margin-bottom:16px; }
+    .cta-h { font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(42px,6vw,80px); line-height:1.05; letter-spacing:-.01em; color:#fff; margin-bottom:14px; }
     .cta-h em { font-style:italic; }
-    .cta-sub { font-size:12px; font-weight:300; letter-spacing:.2em; text-transform:uppercase; color:rgba(255,255,255,.3); margin-bottom:52px; }
-    .cta-wa {
-      display:inline-flex; align-items:center; gap:10px;
-      border:1px solid rgba(255,255,255,.2); color:var(--white);
-      font-family:'Jost',sans-serif; font-weight:400; font-size:11px; letter-spacing:.25em; text-transform:uppercase;
-      padding:18px 48px; text-decoration:none;
-      transition:border-color .35s, background .35s, color .35s;
-    }
+    .cta-sub { font-size:12px; font-weight:300; letter-spacing:.22em; text-transform:uppercase; color:rgba(255,255,255,.28); margin-bottom:52px; }
+    .cta-wa { display:inline-flex; align-items:center; gap:10px; border:1px solid rgba(255,255,255,.2); color:#fff; font-family:'Jost',sans-serif; font-weight:400; font-size:11px; letter-spacing:.25em; text-transform:uppercase; padding:18px 52px; text-decoration:none; transition:border-color .35s,background .35s,color .35s; }
     .cta-wa:hover { border-color:var(--brass); background:var(--brass); color:var(--night); }
 
-    /* FOOTER */
-    footer { background:var(--night); border-top:1px solid rgba(255,255,255,.04); padding:60px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:48px; }
-    .ft-logo { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
-    .ft-m { width:32px; height:32px; opacity:.7; }
-    .ft-nm { font-size:11px; font-weight:500; letter-spacing:.25em; text-transform:uppercase; color:rgba(255,255,255,.6); }
-    .ft-tg { font-size:8px; font-weight:300; letter-spacing:.22em; text-transform:uppercase; color:rgba(255,255,255,.28); }
-    .ft-cap { font-size:13px; font-weight:300; color:rgba(255,255,255,.3); line-height:1.7; }
-    .ft-ch { font-size:9px; font-weight:400; letter-spacing:.32em; text-transform:uppercase; color:var(--brass); margin-bottom:18px; }
-    .ft-ul { list-style:none; display:flex; flex-direction:column; gap:9px; }
-    .ft-ul li { font-size:13px; font-weight:300; color:rgba(255,255,255,.38); line-height:1.6; }
+    /* ── FOOTER ── */
+    footer { background:var(--night); border-top:1px solid rgba(255,255,255,.04); padding:56px 60px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:48px; }
+    .ft-br { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+    .ft-li { width:32px; height:32px; border-radius:50%; object-fit:cover; opacity:.6; }
+    .ft-nm { font-size:11px; font-weight:500; letter-spacing:.25em; text-transform:uppercase; color:rgba(255,255,255,.55); }
+    .ft-tg { font-size:8px; font-weight:300; letter-spacing:.22em; text-transform:uppercase; color:rgba(255,255,255,.25); }
+    .ft-cap { font-size:13px; font-weight:300; color:rgba(255,255,255,.28); line-height:1.7; }
+    .ft-ch { font-size:9px; font-weight:400; letter-spacing:.32em; text-transform:uppercase; color:var(--brass); margin-bottom:16px; }
+    .ft-ul { list-style:none; display:flex; flex-direction:column; gap:8px; }
+    .ft-ul li { font-size:13px; font-weight:300; color:rgba(255,255,255,.35); }
     .ft-ul li a { color:inherit; text-decoration:none; transition:color .3s; }
-    .ft-ul li a:hover { color:rgba(255,255,255,.7); }
-    .ft-bot { background:var(--night); border-top:1px solid rgba(255,255,255,.04); padding:18px 60px; display:flex; justify-content:space-between; }
-    .ft-cp { font-size:10px; font-weight:300; letter-spacing:.08em; color:rgba(255,255,255,.18); }
+    .ft-ul li a:hover { color:rgba(255,255,255,.65); }
+    .ft-bot { background:var(--night); border-top:1px solid rgba(255,255,255,.04); padding:16px 60px; display:flex; justify-content:space-between; }
+    .ft-cp { font-size:10px; font-weight:300; letter-spacing:.08em; color:rgba(255,255,255,.16); }
 
-    /* ANIMATIONS */
-    @keyframes up { from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);} }
+    /* ── ANIMATIONS ── */
+    @keyframes up { from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:none;} }
     @keyframes fadein { from{opacity:0;}to{opacity:1;} }
     @keyframes scroll { from{transform:translateX(0);}to{transform:translateX(-50%);} }
+    @keyframes rule-grow { from{transform:scaleX(0);transform-origin:left;}to{transform:scaleX(1);} }
 
-    /* RESPONSIVE */
-    @media(max-width:1024px){
-      nav{padding:0 32px;}
-      .hero{grid-template-columns:1fr;height:auto;}
-      .hero-l{padding:60px 40px 72px;min-height:60vh;}
-      .hero-r{height:50vw;min-height:260px;}
-      .intro,.about{grid-template-columns:1fr;gap:48px;padding:80px 40px;}
-      .ivr,.avr{display:none;}
-      .svcs{padding:80px 40px;}
-      .svcs-grid{grid-template-columns:repeat(2,1fr);}
-      .booking{grid-template-columns:1fr;padding:80px 40px;gap:48px;}
-      .occ{padding:80px 40px;}
-      .occ-grid{grid-template-columns:1fr;}
-      .testi,.cta-s{padding:80px 40px;}
-      footer{grid-template-columns:1fr;padding:48px 40px;gap:40px;}
-      .ft-bot{padding:16px 40px;}
+    /* ── RESPONSIVE ── */
+    @media(max-width:1100px){
+      .hero{padding-left:40px;padding-right:40px;}
+      .hero::before,.hero::after{display:none;}
+      .svcs,.bridal,.social-proof,.about,.cta-s{padding-left:40px;padding-right:40px;}
+      .svcs-grid,.tl-steps{grid-template-columns:repeat(2,1fr);}
+      .bridal-intro{grid-template-columns:1fr;gap:40px;}
+      .bk-grid{grid-template-columns:1fr;}
+      .about{grid-template-columns:1fr;gap:40px;}
+      .avr{display:none;}
+      footer{grid-template-columns:1fr;padding:48px 40px;}
+      .ft-bot{padding:14px 40px;}
+      .sp-head{grid-template-columns:1fr;gap:20px;}
+      .sp-stat{text-align:left;}
+      .t-card{flex:0 0 calc(70% - 12px);}
     }
-    @media(max-width:640px){
+    @media(max-width:720px){
       nav{padding:0 20px;height:60px;}
-      .nav-txt{display:none;}
-      .hero-l{padding:48px 24px 64px;}
-      .hero-h1{font-size:44px;}
-      .hero-btns{flex-direction:column;align-items:flex-start;gap:20px;}
-      .svcs-grid{grid-template-columns:1fr;}
-      .intro,.about,.occ{padding:64px 24px;}
-      .svcs,.booking,.testi,.cta-s{padding:64px 24px;}
-      .bk-form{padding:32px 20px;}
+      .nav-brand-text{display:none;}
+      .hero{padding:0 24px;}
+      .hero-foot{grid-template-columns:1fr;gap:20px;padding:28px 0 40px;}
+      .hero-actions{justify-content:flex-start;}
+      .hero-h1{font-size:clamp(52px,13vw,90px);}
+      .svcs,.bridal,.social-proof,.about,.cta-s{padding:64px 24px;}
+      .svcs-grid,.tl-steps,.bk-grid,.benefits-grid{grid-template-columns:1fr;}
       footer{padding:48px 24px;}
       .ft-bot{padding:14px 24px;flex-direction:column;gap:6px;}
+      .t-card{flex:0 0 85%;}
     }
     @media(prefers-reduced-motion:reduce){
-      .eyebrow,.hero-h1 .l,.hero-p,.hero-btns,.hero-wlogo{animation:none;opacity:1;transform:none;}
-      .reveal{opacity:1;transform:none;transition:none;}
-      .mtrack{animation:none;}
+      .hero-eyebrow,.hero-h1 .l,.hero-foot{animation:none;opacity:1;transform:none;}
+      .r{opacity:1;transform:none;transition:none;}
+      .mq-t{animation:none;}
     }
   </style>
 </head>
 <body>
 
-<div id="progress"></div>
+<div id="bar"></div>
 
-<!-- NAV -->
+<!-- ════════════════ NAV ════════════════ -->
 <nav id="nav">
-  <a href="#" class="nav-logo">
-    <svg class="nav-mark" viewBox="0 0 80 80" fill="none">
-      <circle cx="40" cy="40" r="36" stroke="#1A1410" stroke-width="1.4"/>
-      <path d="M16 57 L16 29 L29 44 L40 29 L40 57" stroke="#1A1410" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M40 57 L52 25 L64 57" stroke="#1A1410" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      <line x1="46" y1="44" x2="58" y2="44" stroke="#1A1410" stroke-width="1.5" stroke-linecap="round"/>
-    </svg>
-    <div class="nav-txt">
+  <a href="#" class="nav-brand">
+    <img class="nav-logo-img"
+         src="https://d1so26dimrz1o2.cloudfront.net/uploads/avatars/7d918c49119123f0cb5858858676cceb.png"
+         alt="Marcos Ayala logo"
+         onerror="this.style.display='none'">
+    <div class="nav-brand-text">
       <span class="nm">Marcos Ayala</span>
       <span class="tg">Femenino &middot; Masculino</span>
     </div>
   </a>
-  <a href="#reservar" class="nav-cta">Reservar Cita &rarr;</a>
+  <a href="#reservar" class="nav-link">Reservar Cita &rarr;</a>
 </nav>
 
-<!-- HERO -->
+<!-- ════════════════ HERO ════════════════ -->
 <section class="hero">
-  <div class="hero-l">
-    <p class="eyebrow">Recoleta &middot; Asunci&oacute;n &middot; Paraguay</p>
+  <p class="hero-eyebrow">Estilismo &middot; Maquillaje &middot; Recoleta &middot; Asunci&oacute;n &middot; Paraguay</p>
+  <div class="hero-body">
     <h1 class="hero-h1">
-      <span class="l">Tu imagen,</span>
-      <span class="l">en manos</span>
-      <span class="l">expertas.</span>
+      <span class="l l1">Tu imagen,</span>
+      <span class="l l2">en manos</span>
+      <span class="l l3">expertas.</span>
     </h1>
-    <p class="hero-p">Un estudio especializado en estilismo y maquillaje para quienes valoran la diferencia entre lo bueno y lo extraordinario.</p>
-    <div class="hero-btns">
-      <a href="#reservar" class="btn-dark">Reservar Cita</a>
-      <a href="#servicios" class="btn-ghost">Ver servicios</a>
-    </div>
   </div>
-  <div class="hero-r">
-    <svg class="hero-bgmono" viewBox="0 0 400 300" fill="none">
-      <path d="M20 270 L20 60 L110 170 L200 60 L200 270" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M200 270 L280 48 L360 270" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-      <line x1="228" y1="195" x2="332" y2="195" stroke="white" stroke-width="7" stroke-linecap="round"/>
-    </svg>
-    <svg class="hero-wlogo" viewBox="0 0 110 110" fill="none">
-      <circle cx="55" cy="55" r="50" stroke="rgba(255,255,255,0.15)" stroke-width="1.2"/>
-      <path d="M22 79 L22 42 L37 60 L55 42 L55 79" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M55 79 L71 33 L88 79" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-      <line x1="61" y1="61" x2="82" y2="61" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
-    </svg>
-    <span class="hero-vert">@marcosayalafm</span>
+  <div class="hero-foot">
+    <p class="hero-sub">Un estudio especializado en estilismo y maquillaje para quienes valoran la diferencia entre lo bueno y lo extraordinario.</p>
+    <div class="hero-actions">
+      <a href="#reservar" class="btn-fill">Reservar Cita</a>
+      <a href="#servicios" class="btn-line">Ver servicios</a>
+    </div>
   </div>
 </section>
 
-<!-- MARQUEE -->
-<div class="marquee">
-  <div class="mtrack">
-    <span class="mitem">Peinados <b>&middot;</b></span>
-    <span class="mitem">Maquillaje <b>&middot;</b></span>
-    <span class="mitem">Novias <b>&middot;</b></span>
-    <span class="mitem">Tocados <b>&middot;</b></span>
-    <span class="mitem">Color <b>&middot;</b></span>
-    <span class="mitem">Tratamientos <b>&middot;</b></span>
-    <span class="mitem">Estilismo <b>&middot;</b></span>
-    <span class="mitem">Combos <b>&middot;</b></span>
-    <span class="mitem">Peinados <b>&middot;</b></span>
-    <span class="mitem">Maquillaje <b>&middot;</b></span>
-    <span class="mitem">Novias <b>&middot;</b></span>
-    <span class="mitem">Tocados <b>&middot;</b></span>
-    <span class="mitem">Color <b>&middot;</b></span>
-    <span class="mitem">Tratamientos <b>&middot;</b></span>
-    <span class="mitem">Estilismo <b>&middot;</b></span>
-    <span class="mitem">Combos <b>&middot;</b></span>
+<!-- ════════════════ MARQUEE ════════════════ -->
+<div class="mq">
+  <div class="mq-t">
+    <span class="mq-i">Peinados <b>&middot;</b></span><span class="mq-i">Maquillaje <b>&middot;</b></span>
+    <span class="mq-i">Novias <b>&middot;</b></span><span class="mq-i">Tocados <b>&middot;</b></span>
+    <span class="mq-i">Color <b>&middot;</b></span><span class="mq-i">Tratamientos <b>&middot;</b></span>
+    <span class="mq-i">Estilismo <b>&middot;</b></span><span class="mq-i">Combos <b>&middot;</b></span>
+    <span class="mq-i">Peinados <b>&middot;</b></span><span class="mq-i">Maquillaje <b>&middot;</b></span>
+    <span class="mq-i">Novias <b>&middot;</b></span><span class="mq-i">Tocados <b>&middot;</b></span>
+    <span class="mq-i">Color <b>&middot;</b></span><span class="mq-i">Tratamientos <b>&middot;</b></span>
+    <span class="mq-i">Estilismo <b>&middot;</b></span><span class="mq-i">Combos <b>&middot;</b></span>
   </div>
 </div>
 
-<!-- INTRO -->
-<div class="rule"></div>
-<section class="intro">
-  <div class="reveal">
-    <h2 class="intro-h">Un estudio donde cada detalle <em>importa</em>.</h2>
-    <p class="intro-p">En Marcos Ayala, el estilismo es un oficio que se toma en serio. Desde el primer corte hasta el peinado de una noche especial, cada servicio est&aacute; pensado para que te vayas sintiendo completamente vos.</p>
-  </div>
-  <div class="ivr"></div>
-  <div class="stats reveal d2">
-    <div><div class="sn">15+</div><div class="sl">A&ntilde;os de trayectoria</div></div>
-    <div class="shr"></div>
-    <div><div class="sn">Recoleta</div><div class="sl">Asunci&oacute;n, Paraguay</div></div>
-    <div class="shr"></div>
-    <div><div class="sn">Lun&ndash;Jue</div><div class="sl">13:00 a 20:00 hs</div></div>
-  </div>
-</section>
-
-<!-- SERVICES -->
+<!-- ════════════════ SERVICES ════════════════ -->
 <section id="servicios" class="svcs">
-  <div class="svcs-top">
-    <span class="lbl reveal">Servicios</span>
-    <h2 class="svcs-h reveal d1">Lo que <em>hacemos</em>.</h2>
+  <div class="svcs-head">
+    <span class="lbl r">Servicios</span>
+    <h2 class="svcs-h r d1">Lo que <em>hacemos</em>.</h2>
   </div>
   <div class="svcs-grid">
-    <div class="svc reveal">
-      <p class="svc-n">01</p>
-      <h3 class="svc-name">Corte y Peinado</h3>
-      <p class="svc-d">Para el d&iacute;a a d&iacute;a o una noche especial. Resultados que duran y se adaptan a tu estilo de vida.</p>
+    <div class="svc r"><p class="svc-n">01</p><h3 class="svc-nm">Corte y Peinado</h3><p class="svc-d">Para el d&iacute;a a d&iacute;a o una noche especial. Resultados que duran y se adaptan a vos.</p></div>
+    <div class="svc r d1"><p class="svc-n">02</p><h3 class="svc-nm">Maquillaje</h3><p class="svc-d">Natural, dram&aacute;tico o editorial. T&eacute;cnica que resalta lo mejor de cada persona.</p></div>
+    <div class="svc r d2"><p class="svc-n">03</p><h3 class="svc-nm">Novias</h3><p class="svc-d">Peinado y maquillaje nupcial. Consulta, prueba y d&iacute;a del evento incluidos.</p></div>
+    <div class="svc r d3"><p class="svc-n">04</p><h3 class="svc-nm">Tocados</h3><p class="svc-d">Dise&ntilde;os artesanales para galas, quince a&ntilde;os, cocktails y eventos especiales.</p></div>
+    <div class="svc r d4"><p class="svc-n">05</p><h3 class="svc-nm">Color y Tratamiento</h3><p class="svc-d">Mechas, balayage y tratamientos de recuperaci&oacute;n con productos de primera l&iacute;nea.</p></div>
+    <div class="svc r d5"><p class="svc-n">06</p><h3 class="svc-nm">Combos</h3><p class="svc-d">Paquetes combinados para optimizar tu tiempo y el mejor resultado integral.</p></div>
+  </div>
+</section>
+
+<!-- ════════════════ TESTIMONIALS ════════════════ -->
+<section class="social-proof">
+  <div class="sp-inner">
+    <div class="sp-head">
+      <div class="r">
+        <span class="lbl" style="color:rgba(184,144,96,0.55)">Lo que dicen</span>
+        <h2 class="sp-h">Quienes confían<br>en nosotros, <em>vuelven</em>.</h2>
+      </div>
+      <div class="sp-stat r d2">
+        <div class="sp-stat-num">15+</div>
+        <div class="sp-stat-lbl">A&ntilde;os de trayectoria</div>
+      </div>
     </div>
-    <div class="svc reveal d1">
-      <p class="svc-n">02</p>
-      <h3 class="svc-name">Maquillaje</h3>
-      <p class="svc-d">Natural, dram&aacute;tico o editorial. T&eacute;cnica profesional que resalta lo mejor de cada persona.</p>
+    <div class="carousel">
+      <div class="carousel-track" id="carouselTrack">
+        <div class="t-card r">
+          <p class="t-quote">&ldquo;Desde hace a&ntilde;os, el talentoso @marcosayalafm se ocupa de dejarme bonita para mis momentos especiales.&rdquo;</p>
+          <div class="t-rule"></div>
+          <p class="t-name">Carolina Ar&eacute;valo</p>
+          <p class="t-role">VMedia Paraguay</p>
+        </div>
+        <div class="t-card r d1">
+          <p class="t-quote">&ldquo;Marcos entiende exactamente lo que quer&eacute;s sin que tengas que explicar demasiado. El resultado siempre supera lo esperado.&rdquo;</p>
+          <div class="t-rule"></div>
+          <p class="t-name">Valeria M.</p>
+          <p class="t-role">Novia &mdash; Asunci&oacute;n</p>
+        </div>
+        <div class="t-card r d2">
+          <p class="t-quote">&ldquo;Llevo tres a&ntilde;os yendo al estudio y no cambio. El trato es impecable y el trabajo habla solo.&rdquo;</p>
+          <div class="t-rule"></div>
+          <p class="t-name">Daniela R.</p>
+          <p class="t-role">Clienta &mdash; Recoleta</p>
+        </div>
+        <div class="t-card r d3">
+          <p class="t-quote">&ldquo;Para mi quince a&ntilde;os no pod&iacute;a imaginar un resultado m&aacute;s perfecto. El tocado fue exactamente como lo so&ntilde;&eacute;.&rdquo;</p>
+          <div class="t-rule"></div>
+          <p class="t-name">Sofía L.</p>
+          <p class="t-role">Quince a&ntilde;os &mdash; Asunci&oacute;n</p>
+        </div>
+      </div>
     </div>
-    <div class="svc reveal d2">
-      <p class="svc-n">03</p>
-      <h3 class="svc-name">Novias</h3>
-      <p class="svc-d">Peinado y maquillaje nupcial con prueba previa. Un servicio integral para que ese d&iacute;a sea exactamente como lo imagin&aacute;s.</p>
-    </div>
-    <div class="svc reveal d3">
-      <p class="svc-n">04</p>
-      <h3 class="svc-name">Tocados</h3>
-      <p class="svc-d">Dise&ntilde;os &uacute;nicos y artesanales para galas, quince a&ntilde;os, cocktails y eventos especiales.</p>
-    </div>
-    <div class="svc reveal d4">
-      <p class="svc-n">05</p>
-      <h3 class="svc-name">Color y Tratamiento</h3>
-      <p class="svc-d">Coloraciones, mechas, balayage y tratamientos de recuperaci&oacute;n con productos de primera l&iacute;nea.</p>
-    </div>
-    <div class="svc reveal d5">
-      <p class="svc-n">06</p>
-      <h3 class="svc-name">Combos</h3>
-      <p class="svc-d">Paquetes combinados para optimizar tu tiempo y obtener el mejor resultado integral.</p>
+    <div class="carousel-nav">
+      <button class="c-btn" onclick="moveCarousel(-1)" aria-label="Anterior">&#8592;</button>
+      <button class="c-btn" onclick="moveCarousel(1)" aria-label="Siguiente">&#8594;</button>
     </div>
   </div>
 </section>
 
-<!-- TESTIMONIAL -->
-<section class="testi">
-  <div class="trule reveal"></div>
-  <blockquote class="tquote reveal d1">&ldquo;Desde hace a&ntilde;os, el talentoso @marcosayalafm se ocupa de dejarme bonita para mis momentos especiales.&rdquo;</blockquote>
-  <div class="reveal d2">
-    <p class="tname">Carolina Ar&eacute;valo</p>
-    <p class="trole">VMedia Paraguay</p>
+<!-- ════════════════ BRIDAL ════════════════ -->
+<section id="reservar" class="bridal">
+  <div class="bridal-inner">
+    <div class="bridal-intro r">
+      <div>
+        <span class="lbl">Paquete Novia</span>
+        <h2 class="bridal-h">El d&iacute;a m&aacute;s importante de tu vida merece un equipo <em>a la altura</em>.</h2>
+        <p class="bridal-lead">Despu&eacute;s de meses planeando cada detalle &mdash; el vestido, el lugar, los invitados &mdash; lo &uacute;ltimo que quer&eacute;s es preguntarte si el peinado y el maquillaje van a salir bien. Nosotros nos encargamos de eso para que vos solo tengas que disfrutar.</p>
+      </div>
+      <div class="bridal-right">
+        <p class="bridal-hook">&ldquo;Cada novia merece llegar al altar sint&iacute;endose exactamente como siempre lo imagin&oacute;.&rdquo;</p>
+        <p class="bridal-p">Trabajamos con cada novia como si fuera la primera vez: escuchando, entendiendo y creando un look que refleje qui&eacute;n sos, no solo c&oacute;mo quer&eacute;s lucir ese d&iacute;a.</p>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="timeline">
+      <h3 class="tl-h r">C&oacute;mo funciona <em>el proceso</em>.</h3>
+      <div class="tl-steps">
+        <div class="tl-step r">
+          <div class="tl-num">01</div>
+          <h4 class="tl-step-h">Consulta inicial</h4>
+          <p class="tl-step-d">Nos sentamos a hablar sin apuro. Tu visi&oacute;n, tu estilo, el vestido, los colores. Tra&eacute; referencias, fotos, ideas. Esta conversaci&oacute;n es el punto de partida de todo y no tiene costo.</p>
+        </div>
+        <div class="tl-step r d1">
+          <div class="tl-num">02</div>
+          <h4 class="tl-step-h">Prueba de novia</h4>
+          <p class="tl-step-d">Una sesi&oacute;n completa de peinado y maquillaje antes del gran d&iacute;a. Lleg&aacute;s sabiendo exactamente c&oacute;mo vas a lucir. Ajustamos hasta que est&eacute; perfecto. Sin sorpresas el d&iacute;a de la boda.</p>
+        </div>
+        <div class="tl-step r d2">
+          <div class="tl-num">03</div>
+          <h4 class="tl-step-h">El gran d&iacute;a</h4>
+          <p class="tl-step-d">Llegamos donde vos est&eacute;s, puntual y preparados. Transformamos los nervios en confianza. Maquillaje de larga duraci&oacute;n, peinado impecable. Vos solo disfut&aacute;s.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Benefits -->
+    <h3 class="benefits-h r">Lo que est&aacute; <em>incluido</em>.</h3>
+    <div class="benefits-grid r">
+      <div class="benefit"><div class="benefit-dot"></div><div class="benefit-text"><strong>Consulta inicial sin costo</strong> &mdash; Una reuni&oacute;n dedicada a entender tu visi&oacute;n antes de comprometerte.</div></div>
+      <div class="benefit"><div class="benefit-dot"></div><div class="benefit-text"><strong>Prueba completa incluida</strong> &mdash; Peinado y maquillaje de prueba para llegar segura al gran d&iacute;a.</div></div>
+      <div class="benefit"><div class="benefit-dot"></div><div class="benefit-text"><strong>Maquillaje de larga duraci&oacute;n</strong> &mdash; T&eacute;cnicas y productos profesionales que duran toda la jornada sin retoque.</div></div>
+      <div class="benefit"><div class="benefit-dot"></div><div class="benefit-text"><strong>Comitiva completa</strong> &mdash; Disponibilidad para testigos, madres y damas de honor con el mismo nivel de cuidado.</div></div>
+      <div class="benefit"><div class="benefit-dot"></div><div class="benefit-text"><strong>Tocados y accesorios</strong> &mdash; Dise&ntilde;os artesanales disponibles para complementar tu look nupcial.</div></div>
+      <div class="benefit"><div class="benefit-dot"></div><div class="benefit-text"><strong>Atenci&oacute;n personalizada</strong> &mdash; Un &uacute;nico equipo de principio a fin, sin sorpresas de &uacute;ltimo momento.</div></div>
+    </div>
+
+    <!-- Form -->
+    <div class="bk-grid r">
+      <div class="bk-cta">
+        <span class="lbl" style="color:rgba(184,144,96,0.55)">D&aacute; el primer paso</span>
+        <h3 class="bk-cta-h">La consulta <em>es gratuita</em> y sin compromiso.</h3>
+        <p class="bk-cta-p">Completa el formulario y nos ponemos en contacto v&iacute;a WhatsApp para coordinar la primera reuni&oacute;n. Sin presi&oacute;n, sin costo.</p>
+      </div>
+      <div class="bk-form-wrap">
+        <p class="bk-form-title">Solicitar consulta</p>
+        <form id="bridal-form">
+          <div class="fg"><label for="nombre">Nombre</label><input type="text" id="nombre" placeholder="Tu nombre" required></div>
+          <div class="fg"><label for="tel">WhatsApp</label><input type="text" id="tel" placeholder="(595) 9XX XXX XXX"></div>
+          <div class="fg"><label for="serv">Servicio</label>
+            <select id="serv">
+              <option value="">Seleccionar</option>
+              <option>Paquete Novia</option><option>Maquillaje</option><option>Peinado</option>
+              <option>Tocado</option><option>Color y Tratamiento</option><option>Combo</option><option>Otro</option>
+            </select>
+          </div>
+          <div class="fg"><label for="fecha">Fecha del evento</label><input type="text" id="fecha" placeholder="Ej: 15 de agosto de 2025"></div>
+          <div class="fg"><label for="msg">Mensaje (opcional)</label><textarea id="msg" placeholder="Cont&#225;nos m&#225;s sobre lo que busc&#225;s..."></textarea></div>
+          <p class="priv">Tu informaci&oacute;n es confidencial y solo se usar&aacute; para coordinar tu cita.</p>
+          <button type="submit" class="btn-sub">Enviar por WhatsApp &rarr;</button>
+        </form>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- OCCASIONS -->
-<section class="occ">
-  <span class="lbl reveal">Para toda ocasi&oacute;n</span>
-  <h2 class="occ-h reveal d1">El estilismo que la situaci&oacute;n <em>merece</em>.</h2>
-  <div class="occ-grid">
-    <div class="occ-item reveal">
-      <span class="occ-num">01</span>
-      <div>
-        <h3 class="occ-title">Bodas y Novias</h3>
-        <p class="occ-desc">El d&iacute;a m&aacute;s especial requiere el equipo m&aacute;s preparado. Peinado y maquillaje nupcial con prueba previa incluida.</p>
-      </div>
-    </div>
-    <div class="occ-item reveal d1">
-      <span class="occ-num">02</span>
-      <div>
-        <h3 class="occ-title">Quince A&ntilde;os</h3>
-        <p class="occ-desc">Un momento &uacute;nico que merece un look perfectamente pensado, de la cabeza a los pies.</p>
-      </div>
-    </div>
-    <div class="occ-item reveal d2">
-      <span class="occ-num">03</span>
-      <div>
-        <h3 class="occ-title">Galas y Eventos</h3>
-        <p class="occ-desc">Para esa noche de gala, premiaci&oacute;n, cocktail o cualquier ocasi&oacute;n que lo requiera.</p>
-      </div>
-    </div>
-    <div class="occ-item reveal d3">
-      <span class="occ-num">04</span>
-      <div>
-        <h3 class="occ-title">Producciones y Medios</h3>
-        <p class="occ-desc">Estilismo para televisi&oacute;n, fotograf&iacute;a editorial, campa&ntilde;as y producciones art&iacute;sticas.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- BOOKING -->
-<section id="reservar" class="booking">
-  <div>
-    <span class="lbl reveal">Paquete Novia</span>
-    <h2 class="bk-h reveal d1">Tu d&iacute;a especial, <em>perfecto</em>.</h2>
-    <p class="bk-p reveal d2">Un servicio dedicado exclusivamente a la novia: prueba de peinado y maquillaje, coordinaci&oacute;n el d&iacute;a del evento y atenci&oacute;n personalizada de principio a fin.</p>
-    <div class="bk-dets reveal d3">
-      <div class="bk-det">Prueba de peinado y maquillaje incluida</div>
-      <div class="bk-det">Disponibilidad para boda completa (novia y testigos)</div>
-      <div class="bk-det">Seguimiento desde la primera consulta hasta el evento</div>
-      <div class="bk-det">Consulta inicial gratuita y sin compromiso</div>
-    </div>
-  </div>
-  <div class="bk-form reveal d2">
-    <p class="bk-fh">Solicitar informaci&oacute;n</p>
-    <form id="contact-form">
-      <div class="fg">
-        <label for="nombre">Nombre completo</label>
-        <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
-      </div>
-      <div class="fg">
-        <label for="telefono">WhatsApp</label>
-        <input type="text" id="telefono" name="telefono" placeholder="(595) 9XX XXX XXX">
-      </div>
-      <div class="fg">
-        <label for="servicio">Servicio de inter&eacute;s</label>
-        <select id="servicio" name="servicio">
-          <option value="">Seleccionar servicio</option>
-          <option>Paquete Novia</option>
-          <option>Maquillaje</option>
-          <option>Peinado</option>
-          <option>Tocado</option>
-          <option>Color y Tratamiento</option>
-          <option>Combo</option>
-          <option>Otro</option>
-        </select>
-      </div>
-      <div class="fg">
-        <label for="fecha">Fecha del evento</label>
-        <input type="text" id="fecha" name="fecha" placeholder="Ej: 15 de agosto de 2025">
-      </div>
-      <div class="fg">
-        <label for="mensaje">Mensaje (opcional)</label>
-        <textarea id="mensaje" name="mensaje" placeholder="Cont&#225;nos m&#225;s sobre lo que busc&#225;s..."></textarea>
-      </div>
-      <p class="privacy">Tu informaci&oacute;n es confidencial y solo se usar&aacute; para coordinar tu cita.</p>
-      <button type="submit" class="btn-sub">Enviar por WhatsApp &rarr;</button>
-    </form>
-  </div>
-</section>
-
-<!-- ABOUT -->
+<!-- ════════════════ ABOUT ════════════════ -->
+<div class="sec-rule"></div>
 <section class="about">
   <div>
-    <span class="lbl reveal">El estudio</span>
-    <h2 class="about-h reveal d1">Marcos Ayala <em>FM</em>.</h2>
-    <p class="about-p reveal d2">Un espacio en el coraz&oacute;n de Recoleta, Asunci&oacute;n, donde el estilismo se entiende como un lenguaje propio. Atendemos a quienes buscan una imagen cuidada, sin importar la ocasi&oacute;n.</p>
+    <span class="lbl r">El estudio</span>
+    <h2 class="about-h r d1">Marcos Ayala <em>FM</em>.</h2>
+    <p class="about-p r d2">Un espacio en el coraz&oacute;n de Recoleta donde el estilismo se entiende como un lenguaje propio. Atendemos a quienes buscan una imagen cuidada, sin importar la ocasi&oacute;n.</p>
   </div>
   <div class="avr"></div>
-  <div class="ainfo reveal d1">
-    <div><span class="ailbl">Ubicaci&oacute;n</span><span class="aival">Las Perlas 4403 entre Saravi y Choferes del Chaco, Recoleta, Asunci&oacute;n</span></div>
-    <div><span class="ailbl">Horarios</span><span class="aival">Lunes a Jueves, 13:00 a 20:00 hs</span></div>
-    <div><span class="ailbl">Contacto</span><span class="aival">0982 696 758</span></div>
-    <div><span class="ailbl">Instagram</span><span class="aival">@marcosayalafm</span></div>
+  <div class="ainfo r d1">
+    <div class="ai"><span class="ai-l">Ubicaci&oacute;n</span><span class="ai-v">Las Perlas 4403 entre Saravi y Choferes del Chaco, Recoleta, Asunci&oacute;n</span></div>
+    <div class="ai"><span class="ai-l">Horarios</span><span class="ai-v">Lunes a Jueves, 13:00 a 20:00 hs</span></div>
+    <div class="ai"><span class="ai-l">Contacto</span><span class="ai-v">0982 696 758</span></div>
+    <div class="ai"><span class="ai-l">Instagram</span><span class="ai-v">@marcosayalafm</span></div>
   </div>
 </section>
 
-<!-- FINAL CTA -->
+<!-- ════════════════ FINAL CTA ════════════════ -->
 <section class="cta-s">
-  <span class="lbl" style="color:rgba(184,144,96,0.55)">C&oacute;mo empezar</span>
-  <h2 class="cta-h reveal"><em>Tu pr&oacute;xima</em><br>cita te espera.</h2>
-  <p class="cta-sub reveal d1">Recoleta, Asunci&oacute;n &middot; 0982 696 758</p>
-  <a href="https://wa.me/595982696758?text=Hola%20Marcos%2C%20me%20gustar%C3%ADa%20reservar%20una%20cita." class="cta-wa reveal d2">Escribinos por WhatsApp</a>
+  <span class="lbl" style="color:rgba(184,144,96,0.45)">C&oacute;mo empezar</span>
+  <h2 class="cta-h r"><em>Tu pr&oacute;xima</em><br>cita te espera.</h2>
+  <p class="cta-sub r d1">Recoleta, Asunci&oacute;n &middot; 0982 696 758</p>
+  <a href="https://wa.me/595982696758?text=Hola%20Marcos%2C%20me%20gustar%C3%ADa%20reservar%20una%20cita." class="cta-wa r d2">Escribinos por WhatsApp</a>
 </section>
 
-<!-- FOOTER -->
+<!-- ════════════════ FOOTER ════════════════ -->
 <footer>
   <div>
-    <div class="ft-logo">
-      <svg class="ft-m" viewBox="0 0 80 80" fill="none">
-        <circle cx="40" cy="40" r="36" stroke="rgba(255,255,255,0.35)" stroke-width="1.4"/>
-        <path d="M16 57 L16 29 L29 44 L40 29 L40 57" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M40 57 L52 25 L64 57" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <line x1="46" y1="44" x2="58" y2="44" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" stroke-linecap="round"/>
-      </svg>
-      <div>
-        <div class="ft-nm">Marcos Ayala</div>
-        <div class="ft-tg">Femenino &middot; Masculino</div>
-      </div>
+    <div class="ft-br">
+      <img class="ft-li" src="https://d1so26dimrz1o2.cloudfront.net/uploads/avatars/7d918c49119123f0cb5858858676cceb.png" alt="Marcos Ayala" onerror="this.style.display='none'">
+      <div><div class="ft-nm">Marcos Ayala</div><div class="ft-tg">Femenino &middot; Masculino</div></div>
     </div>
     <p class="ft-cap">Estilismo y maquillaje en el coraz&oacute;n de Recoleta, Asunci&oacute;n.</p>
   </div>
   <div>
     <p class="ft-ch">Servicios</p>
-    <ul class="ft-ul">
-      <li>Peinado y Estilismo</li>
-      <li>Maquillaje</li>
-      <li>Novias</li>
-      <li>Tocados</li>
-      <li>Color y Tratamiento</li>
-      <li>Combos</li>
-    </ul>
+    <ul class="ft-ul"><li>Peinado y Estilismo</li><li>Maquillaje</li><li>Novias</li><li>Tocados</li><li>Color y Tratamiento</li><li>Combos</li></ul>
   </div>
   <div>
     <p class="ft-ch">Contacto</p>
     <ul class="ft-ul">
-      <li>Las Perlas 4403, Recoleta</li>
-      <li>Asunci&oacute;n, Paraguay</li>
+      <li>Las Perlas 4403, Recoleta</li><li>Asunci&oacute;n, Paraguay</li>
       <li><a href="tel:+595982696758">0982 696 758</a></li>
       <li><a href="https://instagram.com/marcosayalafm" target="_blank">@marcosayalafm</a></li>
       <li>Lun&ndash;Jue: 13:00&ndash;20:00</li>
@@ -546,30 +518,47 @@
 </div>
 
 <script>
-  const bar = document.getElementById('progress');
+  // Progress bar
+  const bar = document.getElementById('bar');
   window.addEventListener('scroll', () => {
     bar.style.width = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100) + '%';
   }, { passive: true });
 
+  // Nav
   window.addEventListener('scroll', () => {
-    document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 40);
+    document.getElementById('nav').classList.toggle('up', window.scrollY > 40);
   }, { passive: true });
 
+  // Scroll reveal
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); obs.unobserve(e.target); } });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.r').forEach(el => obs.observe(el));
 
-  document.getElementById('contact-form').addEventListener('submit', function(e) {
+  // Carousel
+  let ci = 0;
+  const track = document.getElementById('carouselTrack');
+  const cards = track.querySelectorAll('.t-card');
+  const perView = window.innerWidth < 720 ? 1 : 2;
+
+  function moveCarousel(dir) {
+    const max = cards.length - perView;
+    ci = Math.max(0, Math.min(ci + dir, max));
+    const cardW = cards[0].offsetWidth + 24;
+    track.style.transform = `translateX(-${ci * cardW}px)`;
+  }
+
+  // Form
+  document.getElementById('bridal-form').addEventListener('submit', function(e) {
     e.preventDefault();
     const n = document.getElementById('nombre').value;
-    const t = document.getElementById('telefono').value;
-    const s = document.getElementById('servicio').value;
+    const t = document.getElementById('tel').value;
+    const s = document.getElementById('serv').value;
     const f = document.getElementById('fecha').value;
-    const m = document.getElementById('mensaje').value;
+    const m = document.getElementById('msg').value;
     let txt = 'Hola Marcos! Me llamo ' + (n || '[nombre]') + '.';
-    if (s) txt += ' Me interesa el servicio de ' + s + '.';
-    if (f) txt += ' La fecha es: ' + f + '.';
+    if (s) txt += ' Me interesa: ' + s + '.';
+    if (f) txt += ' Fecha: ' + f + '.';
     if (m) txt += ' ' + m;
     if (t) txt += ' Mi numero: ' + t + '.';
     window.open('https://wa.me/595982696758?text=' + encodeURIComponent(txt), '_blank');
