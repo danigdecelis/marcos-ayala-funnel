@@ -284,13 +284,20 @@
     .svcs-h em { font-style: italic; }
     .svcs-ct { font-family: var(--serif); font-weight: 300; font-size: 11px; letter-spacing: .1em; color: var(--muted); }
     .svc-list { max-width: 1280px; margin: 0 auto; }
+    @media (min-width: 769px) {
+      .svc-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0 56px; }
+    }
     .svc-row {
       display: grid; grid-template-columns: 116px 1fr auto;
       align-items: start; gap: 40px; padding: 38px 0;
-      border-top: 1px solid rgba(26,24,22,.07); cursor: default;
+      border-bottom: 1px solid rgba(26,24,22,.07); cursor: default;
       transition: padding-left .3s var(--ease);
     }
-    .svc-row:last-child { border-bottom: 1px solid rgba(26,24,22,.07); }
+    .svc-col .svc-row:first-child { border-top: 1px solid rgba(26,24,22,.07); }
+    /* On mobile: second col's first row shouldn't double-border */
+    @media (max-width: 768px) {
+      .svc-col:last-child .svc-row:first-child { border-top: none; }
+    }
     .svc-row:hover { padding-left: 8px; }
     .svc-num {
       font-family: var(--serif); font-weight: 300;
@@ -643,10 +650,6 @@
 
   <div class="hero-inner">
     <div class="hero-mark">
-      <img class="hero-mark-img"
-           src="https://d1so26dimrz1o2.cloudfront.net/uploads/avatars/7d918c49119123f0cb5858858676cceb.png"
-           alt="Marcos Ayala"
-           onerror="this.style.display='none'">
       <div class="hero-mark-rule"></div>
       <span class="hero-mark-loc">Recoleta &middot; Asunci&oacute;n &middot; Paraguay</span>
     </div>
@@ -721,53 +724,59 @@
     <p class="svcs-ct r d2">06 especialidades</p>
   </div>
   <div class="svc-list">
-    <div class="svc-row r">
-      <div class="svc-num">01</div>
-      <div>
-        <h3 class="svc-name">Corte y Peinado</h3>
-        <p class="svc-desc">Forma, estructura y movimiento. Cada sesi&oacute;n comienza con una escucha y termina con un resultado que le pertenece a quien lo lleva.</p>
+    <!-- Columna izquierda: 01-03 -->
+    <div class="svc-col">
+      <div class="svc-row r">
+        <div class="svc-num">01</div>
+        <div>
+          <h3 class="svc-name">Corte y Peinado</h3>
+          <p class="svc-desc">Forma, estructura y movimiento. Cada sesi&oacute;n comienza con una escucha y termina con un resultado que le pertenece a quien lo lleva.</p>
+        </div>
+        <div class="svc-arrow">&#8594;</div>
       </div>
-      <div class="svc-arrow">&#8594;</div>
+      <div class="svc-row r d1">
+        <div class="svc-num">02</div>
+        <div>
+          <h3 class="svc-name">Maquillaje</h3>
+          <p class="svc-desc">Del gesto m&aacute;s natural al m&aacute;s dram&aacute;tico. La t&eacute;cnica que hace visible lo mejor de cada rostro, sin perder lo que ya tiene.</p>
+        </div>
+        <div class="svc-arrow">&#8594;</div>
+      </div>
+      <div class="svc-row r d2">
+        <div class="svc-num">03</div>
+        <div>
+          <h3 class="svc-name">Paquete Novia</h3>
+          <p class="svc-desc">Tres instancias cuidadas para llegar al d&iacute;a de la boda con la certeza de quien ya lo vivi&oacute; antes. Consulta, prueba y el gran d&iacute;a.</p>
+        </div>
+        <div class="svc-arrow">&#8594;</div>
+      </div>
     </div>
-    <div class="svc-row r d1">
-      <div class="svc-num">02</div>
-      <div>
-        <h3 class="svc-name">Maquillaje</h3>
-        <p class="svc-desc">Del gesto m&aacute;s natural al m&aacute;s dram&aacute;tico. La t&eacute;cnica que hace visible lo mejor de cada rostro, sin perder lo que ya tiene.</p>
+    <!-- Columna derecha: 04-06 -->
+    <div class="svc-col">
+      <div class="svc-row r">
+        <div class="svc-num">04</div>
+        <div>
+          <h3 class="svc-name">Tocados</h3>
+          <p class="svc-desc">Piezas artesanales para galas, quince a&ntilde;os, cocktails y celebraciones que merecen un accesorio pensado desde cero.</p>
+        </div>
+        <div class="svc-arrow">&#8594;</div>
       </div>
-      <div class="svc-arrow">&#8594;</div>
-    </div>
-    <div class="svc-row r d2">
-      <div class="svc-num">03</div>
-      <div>
-        <h3 class="svc-name">Paquete Novia</h3>
-        <p class="svc-desc">Tres instancias cuidadas para llegar al d&iacute;a de la boda con la certeza de quien ya lo vivi&oacute; antes. Consulta, prueba y el gran d&iacute;a.</p>
+      <div class="svc-row r d1">
+        <div class="svc-num">05</div>
+        <div>
+          <h3 class="svc-name">Color y Tratamientos</h3>
+          <p class="svc-desc">Mechas, balayage y recuperaci&oacute;n con productos de primera l&iacute;nea. El color que potencia sin restar, con resultados que duran.</p>
+        </div>
+        <div class="svc-arrow">&#8594;</div>
       </div>
-      <div class="svc-arrow">&#8594;</div>
-    </div>
-    <div class="svc-row r d1">
-      <div class="svc-num">04</div>
-      <div>
-        <h3 class="svc-name">Tocados</h3>
-        <p class="svc-desc">Piezas artesanales para galas, quince a&ntilde;os, cocktails y celebraciones que merecen un accesorio pensado desde cero.</p>
+      <div class="svc-row r d2">
+        <div class="svc-num">06</div>
+        <div>
+          <h3 class="svc-name">Combos</h3>
+          <p class="svc-desc">Peinado y maquillaje en una sola sesi&oacute;n, coordinados para que el resultado sea m&aacute;s que la suma de sus partes.</p>
+        </div>
+        <div class="svc-arrow">&#8594;</div>
       </div>
-      <div class="svc-arrow">&#8594;</div>
-    </div>
-    <div class="svc-row r d2">
-      <div class="svc-num">05</div>
-      <div>
-        <h3 class="svc-name">Color y Tratamientos</h3>
-        <p class="svc-desc">Mechas, balayage y recuperaci&oacute;n con productos de primera l&iacute;nea. El color que potencia sin restar, con resultados que duran.</p>
-      </div>
-      <div class="svc-arrow">&#8594;</div>
-    </div>
-    <div class="svc-row r d3">
-      <div class="svc-num">06</div>
-      <div>
-        <h3 class="svc-name">Combos</h3>
-        <p class="svc-desc">Peinado y maquillaje en una sola sesi&oacute;n, coordinados para que el resultado sea m&aacute;s que la suma de sus partes.</p>
-      </div>
-      <div class="svc-arrow">&#8594;</div>
     </div>
   </div>
 </section>
